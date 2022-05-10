@@ -1,0 +1,19 @@
+[contenteditable]:empty:after,
+.forcePlaceholder:after {
+  content: attr(placeholder);
+  color: rgba(74, 65, 65, 0.598);
+}
+
+.header {
+  cursor: text;
+}
+
+.header .editable {
+  font-size: 3em;
+}
+
+.editable:focus {
+  outline: 0;
+  width: 100%;
+  height: 100%;
+}
