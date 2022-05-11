@@ -2,7 +2,7 @@ import { Component, OnInit, Type, forwardRef } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { CommonModuleComponent } from '../common-module/common-module.component';
-import { HeaderModuleComponent } from '../header-module/header-module.component';
+import { ModuleFormItem } from '../modules';
 
 @Component({
   selector: 'app-module-container',
@@ -18,9 +18,8 @@ import { HeaderModuleComponent } from '../header-module/header-module.component'
 })
 export class ModuleContainerComponent implements OnInit, ControlValueAccessor {
   public moduleForm!: FormGroup;
-
-  isModuleSelected: boolean = true;
-  selectedModule: Type<CommonModuleComponent> = HeaderModuleComponent;
+  selectedModule!: Type<CommonModuleComponent>;
+  isNewModuleSelected: boolean = false;
 
   constructor(public fb: FormBuilder) {
     this.moduleForm = fb.group({
@@ -35,14 +34,19 @@ export class ModuleContainerComponent implements OnInit, ControlValueAccessor {
   }
 
   moduleSelectedEvent(m: Type<CommonModuleComponent>) {
+    this.moduleForm.get('module')?.patchValue({ type: m, text: '' });
     this.selectedModule = m;
-    this.isModuleSelected = true;
+    this.isNewModuleSelected = true;
   }
 
   onChange: any = () => {};
 
-  writeValue(value: any) {
-    this.moduleForm.get('module')?.setValue(value);
+  writeValue(value: ModuleFormItem) {
+    this.moduleForm.get('module')?.patchValue(value);
+    if (value.type) {
+      this.selectedModule = value.type;
+      this.isNewModuleSelected = true;
+    }
   }
 
   registerOnChange(fn: any) {

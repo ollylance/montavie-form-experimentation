@@ -1,0 +1,7 @@
+<input
+  type="file"
+  #fileUploader
+  (change)="onFileSelect($event)"
+  *ngIf="!(previewImgUrl !== undefined) || !previewImgUrl"
+/>
+<img class="preview-image" [src]="previewImgUrl">

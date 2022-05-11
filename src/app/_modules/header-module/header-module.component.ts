@@ -1,7 +1,8 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 
 import { CommonModuleComponent } from '../common-module/common-module.component';
 import { FormBuilder } from '@angular/forms';
+import { ModuleFormItem } from '../modules';
 
 @Component({
   selector: 'app-header-module',
@@ -10,12 +11,14 @@ import { FormBuilder } from '@angular/forms';
 })
 export class HeaderModuleComponent extends CommonModuleComponent implements OnInit, AfterViewInit {
   @ViewChild('editable') editable!: ElementRef;
-  headerValue: string = '';
+  moduleText: string = '';
 
-  constructor(public override fb: FormBuilder) {
+  constructor(public override fb: FormBuilder, private renderer: Renderer2) {
     super(fb);
     this.moduleForm = fb.group({
-      headerModule: fb.control('')
+      type: HeaderModuleComponent,
+      metadata: [],
+      text: fb.control('')
     });
   }
 
@@ -27,17 +30,17 @@ export class HeaderModuleComponent extends CommonModuleComponent implements OnIn
 
   ngAfterViewInit(): void {
     this.editable.nativeElement.focus();
-    this.editable.nativeElement.addEventListener('input', () => {
+    this.renderer.listen(this.editable.nativeElement, 'input', () => {
       let text: string = this.editable.nativeElement.innerText;
-      this.moduleForm.get('headerModule')?.setValue(text);
+      this.moduleForm.get('text')?.setValue(text);
     });
   }
 
-  override writeValue(value: any) {
+  override writeValue(value: ModuleFormItem) {
     if (this.editable) {
-      this.editable.nativeElement.textContent = value;
+      this.editable.nativeElement.textContent = value.text;
     }
-    this.headerValue = value;
-    this.moduleForm.get('headerModule')?.setValue(this.headerValue);
+    this.moduleText = value.text;
+    this.moduleForm.patchValue(value);
   }
 }

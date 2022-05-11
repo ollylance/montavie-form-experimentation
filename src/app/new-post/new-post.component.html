@@ -3,11 +3,11 @@
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div formArrayName="modules">
         <div *ngFor="let module of modules.controls; let i = index">
-          <app-module-container (keydown.enter)="newLine($event, i)" [formControlName]="i" #moduleElement></app-module-container>
+          <app-module-container (keydown)="handleKeydown($event, i)" [formControlName]="i"></app-module-container>
         </div>
       </div>
     </form>
-    <div>
+    <div class="buttons">
       <button mat-button (click)="newModule()">Add</button>
       <button mat-button type="submit" [disabled]="!form.valid" (click)="onSubmit()">Submit</button>
     </div>

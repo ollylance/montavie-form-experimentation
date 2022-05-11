@@ -27,6 +27,7 @@
       ],
       "rules": {
         "no-console": "off",
+        "no-unused-vars": "off",
         "@angular-eslint/component-selector": [
           "error",
           {

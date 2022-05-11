@@ -1,16 +1,21 @@
-<!-- <div
-  class="moduleManager"
-  contenteditable="true"
-  placeholder="Type '/' for commands"
-  cdkOverlayOrigin
-  #trigger="cdkOverlayOrigin"
-  #editable
-></div>
+<div class='input'>
+  <button class='addButton' (click)='manageList()'>+</button>
+  <div
+    class="moduleManager editable"
+    contenteditable="true"
+    placeholder="Type '/' for commands"
+    cdkOverlayOrigin
+    #trigger="cdkOverlayOrigin"
+    #editable
+  >{{moduleText}}</div>
+</div>
 
+
+<!-- Turn this into a seperate thing? -->
 <ng-template
   cdkConnectedOverlay
   [cdkConnectedOverlayOrigin]="trigger"
-  [cdkConnectedOverlayOpen]="filteredModules.length != 0 && editableFocused"
+  [cdkConnectedOverlayOpen]="!!filteredModules.length"
   (overlayKeydown)="handleKeyPressed($event)"
 >
   <div class="body">
@@ -23,4 +28,4 @@
       </p>
     </div>
   </div>
-</ng-template> -->
+</ng-template>

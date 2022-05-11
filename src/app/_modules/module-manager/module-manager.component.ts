@@ -1,12 +1,22 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Output, Type, ViewChild, forwardRef } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  OnInit,
+  Output,
+  Renderer2,
+  Type,
+  ViewChild,
+  forwardRef
+} from '@angular/core';
+import { ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ModuleFormItem, modules } from '../modules';
 
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CommonModuleComponent } from '../common-module/common-module.component';
 import { HeaderModuleComponent } from '../header-module/header-module.component';
 import { ModuleDirective } from '../_directives/module.directive';
-
-declare var tinymce: any;
 
 interface ModuleItem {
   name: string;
@@ -27,7 +37,7 @@ interface ModuleItem {
     }
   ]
 })
-export class ModuleManagerComponent implements ControlValueAccessor, AfterViewInit {
+export class ModuleManagerComponent implements ControlValueAccessor, AfterViewInit, OnInit {
   @ViewChild('editable') editable!: ElementRef;
   @ViewChild(CdkConnectedOverlay) overlay!: CdkConnectedOverlay;
 
@@ -35,63 +45,57 @@ export class ModuleManagerComponent implements ControlValueAccessor, AfterViewIn
 
   @Output() selectedModule = new EventEmitter<Type<CommonModuleComponent>>();
 
-  modules: ModuleItem[] = [{ name: 'Header', icon: 'home', tags: ['text', 'title'], component: HeaderModuleComponent }];
-
-  moduleForm!: FormControl;
+  moduleForm!: FormGroup;
   filteredModules: ModuleItem[] = [];
-  editableFocused: boolean = true;
+  overlayOpen: boolean = true;
   selectedElem: number = 0;
   moduleSelected: boolean = false;
+  moduleText: string = '';
 
-  constructor(public fb: FormBuilder) {
-    this.moduleForm = fb.control('');
+  constructor(public fb: FormBuilder, public renderer: Renderer2) {
+    this.moduleForm = fb.group({
+      type: null,
+      metadata: fb.array([]),
+      text: fb.control('')
+    });
+  }
+
+  ngOnInit() {
+    this.moduleForm.valueChanges.subscribe((val) => {
+      this.onChange(val);
+    });
   }
 
   ngAfterViewInit(): void {
-    let textConfig = {
-      target: this.editable.nativeElement,
-      base_url: '/tinymce',
-      suffix: '.min',
-      menubar: false,
-      branding: false,
-      statusbar: false,
-      inline: true,
-      toolbar: false,
-      plugins: ['quickbars'],
-      quickbars_insert_toolbar: '',
-      quickbars_selection_toolbar: 'italic underline | forecolor backcolor',
-      setup: (editor: any) => {
-        editor.on('input', (e: any) => {
-          let text: string = e.srcElement.innerText;
-          this.onChange(text);
-          if (text && text.startsWith('/')) {
-            this.filteredModules = this.search(text);
-          } else {
-            this.filteredModules = [];
-          }
-        });
-        editor.on('focus', () => {
-          this.editableFocused = true;
-          this.selectedElem = 0;
-        });
-        editor.on('blur', () => {
-          this.editableFocused = false;
-        });
+    this.editable.nativeElement.focus();
+    this.renderer.listen(this.editable.nativeElement, 'input', (e: any) => {
+      let text: string = e.srcElement.innerText;
+      this.moduleForm.get('text')?.setValue(text);
+      if (text && text.startsWith('/')) {
+        this.filteredModules = this.search(text);
+        this.overlayOpen = true;
+      } else {
+        this.filteredModules = [];
       }
-    };
-    tinymce.init(textConfig);
+    });
+    this.renderer.listen(this.editable.nativeElement, 'blur', () => {
+      this.overlayOpen = false;
+    });
   }
 
-  get value() {
-    return this.moduleForm.value;
+  manageList() {
+    if (this.overlayOpen) {
+      this.overlayOpen = false;
+    } else {
+      this.overlayOpen = true;
+      this.filteredModules = modules;
+    }
   }
 
   private search(value: string): ModuleItem[] {
     const filterValue = value.toLowerCase().substr(1);
-    var filtered = new Set(this.modules.filter((option) => option.name.toLowerCase().includes(filterValue)));
-    let subfiltered = this.modules.filter((option) =>
-      option.tags.some((val) => val.toLowerCase().includes(filterValue))
-    );
+    var filtered = new Set(modules.filter((option) => option.name.toLowerCase().includes(filterValue)));
+    let subfiltered = modules.filter((option) => option.tags.some((val) => val.toLowerCase().includes(filterValue)));
     subfiltered.forEach((item) => filtered.add(item));
     return Array.from(filtered);
   }
@@ -118,7 +122,13 @@ export class ModuleManagerComponent implements ControlValueAccessor, AfterViewIn
 
   openMenu() {}
 
-  writeValue() {}
+  writeValue(value: ModuleFormItem) {
+    if (this.editable) {
+      this.editable.nativeElement.textContent = value.text;
+    }
+    this.moduleText = value.text;
+    this.moduleForm.patchValue(value);
+  }
 
   registerOnChange(fn: any) {
     this.onChange = fn;

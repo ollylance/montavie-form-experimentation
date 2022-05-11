@@ -1,12 +1,28 @@
-[contenteditable]:empty:after,
-.forcePlaceholder:after {
-  content: attr(placeholder);
-  color: rgba(74, 65, 65, 0.598);
-}
-
 .moduleManager {
   font-size: 1.5em;
   cursor: text;
+}
+
+.addButton {
+  display: none;
+}
+
+.input {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.input:hover {
+  .addButton {
+    position:absolute;
+    display:inline;
+    margin: 0px 0px 0px 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    right:0;
+    margin-right: 105%;
+  } 
 }
 
 .moduleManager:focus {
@@ -22,7 +38,8 @@
 }
 
 .body {
-  min-width: 250px;
+  max-width: 100px;
+  text-align: center;
   border: solid 1px #ccc;
   padding: 10px;
   background-color: white;
@@ -30,6 +47,7 @@
   box-sizing: border-box;
   flex-direction: column;
   border-radius: 5px;
+  margin: 0;
 }
 
 .body p {
