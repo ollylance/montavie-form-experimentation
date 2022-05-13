@@ -1,31 +1,18 @@
 <div class='input'>
-  <button class='addButton' (click)='manageList()'>+</button>
+  <button class='addButton' (click)="show(editable)">+</button>
   <div
     class="moduleManager editable"
     contenteditable="true"
-    placeholder="Type '/' for commands"
-    cdkOverlayOrigin
-    #trigger="cdkOverlayOrigin"
     #editable
   >{{moduleText}}</div>
 </div>
 
 
 <!-- Turn this into a seperate thing? -->
-<ng-template
+<!-- <ng-template
   cdkConnectedOverlay
   [cdkConnectedOverlayOrigin]="trigger"
-  [cdkConnectedOverlayOpen]="!!filteredModules.length"
-  (overlayKeydown)="handleKeyPressed($event)"
+  [cdkConnectedOverlayOpen]="searchText.length != 0"
 >
-  <div class="body">
-    <div *ngFor="let m of filteredModules; let i = index" [ngSwitch]="selectedElem">
-      <p *ngSwitchCase="i" class="bordered" (click)="selectModule(m.component)">
-        {{ m.name }}
-      </p>
-      <p *ngSwitchDefault (click)="selectModule(m.component)">
-        {{ m.name }}
-      </p>
-    </div>
-  </div>
-</ng-template>
+  <app-module-overlay (selectedModule)="selectModule($any($event))" [searchText]='searchText'></app-module-overlay>
+</ng-template> -->

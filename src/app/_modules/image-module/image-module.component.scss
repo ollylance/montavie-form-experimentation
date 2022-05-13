@@ -2,6 +2,10 @@
   width: 100%;
 }
 
+.editable:focus {
+    border: 1px solid black
+}
+
 .preview-image img {
   width: 100%;
 }

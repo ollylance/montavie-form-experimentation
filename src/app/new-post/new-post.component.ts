@@ -1,8 +1,9 @@
-import { Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, QueryList, TemplateRef, ViewChildren } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { ModuleFormItem, modules } from '../_modules/modules';
 
 import { ModuleManagerComponent } from '../_modules/module-manager/module-manager.component';
+import { OverlayService } from '../_modules/module-overlay/overlay.service';
 
 @Component({
   selector: 'app-new-post',
@@ -102,9 +103,9 @@ export class NewPostComponent {
           this.modules.at(index - 1)?.patchValue({ text: beforeVal + text });
           this.modules.removeAt(index);
           this.focusOnIndex(index - 1);
-          var sel = window.getSelection();
+          let sel = window.getSelection();
           const node = sel?.anchorNode;
-          var range = document.createRange();
+          let range = document.createRange();
           if (node) {
             range.setStart(node, beforeVal.length);
             range.collapse(true);
@@ -112,7 +113,34 @@ export class NewPostComponent {
             sel?.addRange(range);
           }
         } else {
-          //focus on the module and dont delete anything
+          this.focusOnIndex(index - 1);
+        }
+      }
+    } else {
+      if (index == 0) {
+        this.modules.removeAt(0);
+        if (this.modules.length <= 1) {
+          this.modules.insert(0, this.fb.control({ type: null, metadata: [], text: '' }));
+        }
+        this.focusOnIndex(index);
+      } else {
+        // if previous module is a text module go through with both
+        const beforeFormVal: ModuleFormItem = this.modules.at(index - 1).value;
+        if (this.isTextModule(beforeFormVal)) {
+          let beforeVal: string = beforeFormVal.text;
+          this.modules.removeAt(index);
+          this.focusOnIndex(index - 1);
+          let sel = window.getSelection();
+          const node = sel?.anchorNode;
+          let range = document.createRange();
+          if (node) {
+            range.setStart(node, beforeVal.length);
+            range.collapse(true);
+            sel?.removeAllRanges();
+            sel?.addRange(range);
+          }
+        } else {
+          this.focusOnIndex(index - 1);
         }
       }
     }

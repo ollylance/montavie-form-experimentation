@@ -1,5 +1,6 @@
 import { CommonModuleComponent } from './common-module/common-module.component';
 import { HeaderModuleComponent } from './header-module/header-module.component';
+import { ImageModuleComponent } from './image-module/image-module.component';
 import { Type } from '@angular/core';
 
 type ModuleItem = {
@@ -17,5 +18,6 @@ export type ModuleFormItem = {
 };
 
 export const modules: ModuleItem[] = [
-  { name: 'Header', type: 'text', icon: 'home', tags: ['text', 'title'], component: HeaderModuleComponent }
+  { name: 'Header', type: 'text', icon: 'home', tags: ['text', 'title'], component: HeaderModuleComponent },
+  { name: 'Image', type: 'image', icon: 'image', tags: ['picture', 'image', 'photo'], component: ImageModuleComponent }
 ];

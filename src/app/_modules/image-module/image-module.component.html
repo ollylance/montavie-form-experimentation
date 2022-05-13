@@ -1,7 +1,9 @@
-<input
-  type="file"
-  #fileUploader
-  (change)="onFileSelect($event)"
-  *ngIf="!(previewImgUrl !== undefined) || !previewImgUrl"
-/>
-<img class="preview-image" [src]="previewImgUrl">
+<div class='editable' contenteditable='false' tabindex="0">
+    <input
+    type="file"
+    #fileUploader
+    (change)="onFileSelect($event)"
+    *ngIf="!(previewImgUrl !== undefined) || !previewImgUrl"
+    />
+    <img class="preview-image" [src]="previewImgUrl">
+</div>

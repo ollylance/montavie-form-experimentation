@@ -17,13 +17,7 @@ import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CommonModuleComponent } from '../common-module/common-module.component';
 import { HeaderModuleComponent } from '../header-module/header-module.component';
 import { ModuleDirective } from '../_directives/module.directive';
-
-interface ModuleItem {
-  name: string;
-  icon: string;
-  tags: string[];
-  component: Type<CommonModuleComponent>;
-}
+import { OverlayService } from '../module-overlay/overlay.service';
 
 @Component({
   selector: 'app-module-manager',
@@ -39,20 +33,19 @@ interface ModuleItem {
 })
 export class ModuleManagerComponent implements ControlValueAccessor, AfterViewInit, OnInit {
   @ViewChild('editable') editable!: ElementRef;
-  @ViewChild(CdkConnectedOverlay) overlay!: CdkConnectedOverlay;
 
   @ViewChild(ModuleDirective, { static: true }) moduleHost!: ModuleDirective;
 
   @Output() selectedModule = new EventEmitter<Type<CommonModuleComponent>>();
 
   moduleForm!: FormGroup;
-  filteredModules: ModuleItem[] = [];
   overlayOpen: boolean = true;
   selectedElem: number = 0;
   moduleSelected: boolean = false;
   moduleText: string = '';
+  searchText: string = '';
 
-  constructor(public fb: FormBuilder, public renderer: Renderer2) {
+  constructor(public fb: FormBuilder, public renderer: Renderer2, private overlay: OverlayService) {
     this.moduleForm = fb.group({
       type: null,
       metadata: fb.array([]),
@@ -72,14 +65,30 @@ export class ModuleManagerComponent implements ControlValueAccessor, AfterViewIn
       let text: string = e.srcElement.innerText;
       this.moduleForm.get('text')?.setValue(text);
       if (text && text.startsWith('/')) {
-        this.filteredModules = this.search(text);
-        this.overlayOpen = true;
+        this.searchText = text;
       } else {
-        this.filteredModules = [];
+        this.searchText = '';
       }
     });
     this.renderer.listen(this.editable.nativeElement, 'blur', () => {
       this.overlayOpen = false;
+    });
+  }
+
+  selectModule(module: Type<CommonModuleComponent>) {
+    this.selectedModule.emit(module);
+  }
+
+  show(origin: any) {
+    const ref = this.overlay.open({
+      origin,
+      text: 'Hello',
+      width: '200px',
+      height: '200px'
+    });
+
+    ref.afterClosed$.subscribe((res: any) => {
+      console.log(res);
     });
   }
 
@@ -88,34 +97,8 @@ export class ModuleManagerComponent implements ControlValueAccessor, AfterViewIn
       this.overlayOpen = false;
     } else {
       this.overlayOpen = true;
-      this.filteredModules = modules;
+      this.searchText = '';
     }
-  }
-
-  private search(value: string): ModuleItem[] {
-    const filterValue = value.toLowerCase().substr(1);
-    var filtered = new Set(modules.filter((option) => option.name.toLowerCase().includes(filterValue)));
-    let subfiltered = modules.filter((option) => option.tags.some((val) => val.toLowerCase().includes(filterValue)));
-    subfiltered.forEach((item) => filtered.add(item));
-    return Array.from(filtered);
-  }
-
-  handleKeyPressed(event: KeyboardEvent) {
-    if (event.key == 'ArrowDown') {
-      this.selectedElem = (this.selectedElem + 1) % this.filteredModules.length;
-    } else if (event.key == 'ArrowUp') {
-      this.selectedElem = (this.selectedElem - 1) % this.filteredModules.length;
-      if (this.selectedElem == -1) {
-        this.selectedElem = this.filteredModules.length - 1;
-      }
-    } else if (event.key == 'Enter') {
-      this.moduleSelected = true;
-      this.selectModule(this.filteredModules[this.selectedElem].component);
-    }
-  }
-
-  selectModule(module: Type<CommonModuleComponent>) {
-    this.selectedModule.emit(module);
   }
 
   onChange: any = () => {};
