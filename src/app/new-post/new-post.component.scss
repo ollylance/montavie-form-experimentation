@@ -10,7 +10,6 @@
 
 .module-container {
   width: 690px;
-  box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.2);
   text-align: left;
   color: #626262;
   font-size: 14px;
@@ -21,4 +20,53 @@
 
 .buttons {
   margin-top: 20px;
+}
+
+/* Animate items as they're being sorted. */
+.cdk-drop-list-dragging .cdk-drag {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  .tools {
+    visibility: hidden;
+  }
+}
+
+/* Animate an item that has been dropped. */
+.cdk-drag-animating {
+  transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-preview {
+  .tools {
+    visibility: visible;
+  }
+}
+
+.moduleElement {
+  display:flex;
+  .tools {
+    display:flex;
+    flex-direction: row;
+  }
+}
+
+.moduleElement:hover .tools {
+  visibility: visible;
+}
+
+.addButton .dragHandle {
+  margin: 0px 0px 0px 5px;
+}
+
+.tools {
+  visibility: hidden;
+}
+
+.module {
+  width: 100%;
+  padding-left: 10px;
+  // border-left: 1px solid black;
 }

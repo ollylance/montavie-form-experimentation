@@ -1,9 +1,20 @@
 <div class="page-container">
   <div class="module-container">
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <div formArrayName="modules">
-        <div *ngFor="let module of modules.controls; let i = index">
-          <app-module-container (keydown)="handleKeydown($event, i)" [formControlName]="i"></app-module-container>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="module-boundary">
+      <div formArrayName="modules" cdkDropList (cdkDropListDropped)="drop($event)">
+        <div
+          class="moduleElement"
+          *ngFor="let module of modules.controls; let i = index"
+          cdkDrag
+          cdkDragLockAxis="y"
+          cdkDragBoundary=".module-boundary"
+        >
+          <div class="tools">
+            <div cdkHandle class="dragHandle">&#10247;</div>
+          </div>
+          <div class="module">
+            <app-module-container (keydown)="handleKeydown($event, i)" [formControlName]="i"></app-module-container>
+          </div>
         </div>
       </div>
     </form>

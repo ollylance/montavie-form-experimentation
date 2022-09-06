@@ -1,12 +1,8 @@
-<div class='input'>
-  <button class='addButton' (click)="show(editable)">+</button>
-  <div
-    class="moduleManager editable"
-    contenteditable="true"
-    #editable
-  >{{moduleText}}</div>
+<div class="input">
+  <div (mousedown)="$event.stopPropagation()" class="moduleManager editable" contenteditable="true" #editable>
+    {{ moduleText }}
+  </div>
 </div>
-
 
 <!-- Turn this into a seperate thing? -->
 <!-- <ng-template

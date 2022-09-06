@@ -1,9 +1,12 @@
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, ElementRef, QueryList, TemplateRef, ViewChildren } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { ModuleFormItem, modules } from '../_modules/modules';
 
 import { ModuleManagerComponent } from '../_modules/module-manager/module-manager.component';
 import { OverlayService } from '../_modules/module-overlay/overlay.service';
+import { ImageModuleComponent } from '../_modules/image-module/image-module.component';
+import { HeaderModuleComponent } from '../_modules/header-module/header-module.component';
 
 @Component({
   selector: 'app-new-post',
@@ -14,6 +17,7 @@ export class NewPostComponent {
   @ViewChildren('editable') moduleElements!: QueryList<ElementRef>;
   form!: FormGroup;
   focusIndex: number = 0;
+  openNav: boolean = true;
 
   constructor(private fb: FormBuilder, private elem: ElementRef) {
     this.form = fb.group({
@@ -49,9 +53,15 @@ export class NewPostComponent {
     } else if (e.key == 'Enter') {
       e.preventDefault();
       this.handleEnter(index);
-    } else if (e.key == 'Delete') {
-      // do nothing
     }
+  }
+
+  drop(event: CdkDragDrop<ModuleFormItem[]>) {
+    console.log(this.modules);
+    const modulesCopy = this.modules.value;
+    moveItemInArray(modulesCopy, event.previousIndex, event.currentIndex);
+    this.modules.setValue(modulesCopy);
+    console.log(this.modules);
   }
 
   onSubmit() {
@@ -59,7 +69,7 @@ export class NewPostComponent {
   }
 
   newModule() {
-    this.modules.push(this.fb.control({ type: null, metadata: [], text: '' }));
+    this.modules.push(this.fb.control({ type: HeaderModuleComponent, metadata: [], text: '' }));
   }
 
   handleEnter(index: number) {
@@ -72,6 +82,7 @@ export class NewPostComponent {
 
   isTextModule(value: ModuleFormItem) {
     const moduleVal = modules.find((elem) => elem.component == value.type);
+    console.log(moduleVal?.type);
     if (!value.type || moduleVal?.type == 'text') {
       return true;
     } else {

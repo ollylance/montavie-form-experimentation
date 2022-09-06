@@ -1,0 +1,14 @@
+<div class='sideNav'>
+  <div class='tabs'>
+    <button class='tab' [ngClass]='tabSelected == "note" ? "current": ""' (onclick)='manageTab("note")'>Home</button>
+    <button class='tab' [ngClass]='tabSelected == "style" ? "current": ""' (onclick)='manageTab("style")'>Style</button>
+    <button class='tab' [ngClass]='tabSelected == "add" ? "current": ""' (onclick)='manageTab("add")'>Add</button>
+    <button class='tab' [ngClass]='tabSelected == "errors" ? "current": ""' (onclick)='manageTab("errors")'>Errors</button>
+    <button class='tab' [ngClass]='tabSelected == "help" ? "current": ""' (onclick)='manageTab("help")'>Help</button>
+  </div>
+  <div class='contentContainer'>
+    <div class='content'>
+      Field Notes
+    </div>
+  </div>
+</div>
