@@ -1,8 +1,8 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component, ElementRef, QueryList, TemplateRef, ViewChildren } from '@angular/core';
+import { Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { ModuleFormItem, modules } from '../_modules/modules';
-
+import { v4 as uuidv4 } from 'uuid';
 import { ModuleManagerComponent } from '../_modules/module-manager/module-manager.component';
 import { OverlayService } from '../_modules/module-overlay/overlay.service';
 import { ImageModuleComponent } from '../_modules/image-module/image-module.component';
@@ -21,7 +21,7 @@ export class NewPostComponent {
 
   constructor(private fb: FormBuilder, private elem: ElementRef) {
     this.form = fb.group({
-      modules: fb.array([fb.control({ type: null, metadata: [], text: '' })])
+      modules: fb.array([fb.control({ type: HeaderModuleComponent, metadata: [], text: '', id: uuidv4() })])
     });
   }
 
@@ -56,20 +56,31 @@ export class NewPostComponent {
     }
   }
 
+  moveItemInFormArray(formArray: FormArray, fromIndex: number, toIndex: number): void {
+    const dir = toIndex > fromIndex ? 1 : -1;
+
+    const item = formArray.at(fromIndex);
+    for (let i = fromIndex; i * dir < toIndex * dir; i = i + dir) {
+      const current = formArray.at(i + dir);
+      formArray.setControl(i, current);
+    }
+    formArray.setControl(toIndex, item);
+  }
+
   drop(event: CdkDragDrop<ModuleFormItem[]>) {
-    console.log(this.modules);
-    const modulesCopy = this.modules.value;
-    moveItemInArray(modulesCopy, event.previousIndex, event.currentIndex);
-    this.modules.setValue(modulesCopy);
-    console.log(this.modules);
+    this.moveItemInFormArray(this.modules, event.previousIndex, event.currentIndex);
   }
 
   onSubmit() {
     console.log(this.modules.value);
   }
 
+  trackModule(index: number, module: any) {
+    return module.value.id;
+  }
+
   newModule() {
-    this.modules.push(this.fb.control({ type: HeaderModuleComponent, metadata: [], text: '' }));
+    this.modules.push(this.fb.control({ type: ImageModuleComponent, metadata: [], text: '', id: uuidv4() }));
   }
 
   handleEnter(index: number) {
@@ -77,7 +88,7 @@ export class NewPostComponent {
     const before = pos.text.slice(0, pos.start);
     const next = pos.text.slice(pos.end);
     this.modules.at(index)?.patchValue({ text: before });
-    this.modules.insert(index + 1, this.fb.control({ type: null, metadata: [], text: next }));
+    this.modules.insert(index + 1, this.fb.control({ type: null, metadata: [], text: next, id: uuidv4() }));
   }
 
   isTextModule(value: ModuleFormItem) {
@@ -103,7 +114,7 @@ export class NewPostComponent {
       if (index == 0) {
         this.modules.removeAt(0);
         if (this.modules.length <= 1) {
-          this.modules.insert(0, this.fb.control({ type: null, metadata: [], text: '' }));
+          this.modules.insert(0, this.fb.control({ type: null, metadata: [], text: '', id: uuidv4() }));
         }
         this.focusOnIndex(index);
       } else {
@@ -131,7 +142,7 @@ export class NewPostComponent {
       if (index == 0) {
         this.modules.removeAt(0);
         if (this.modules.length <= 1) {
-          this.modules.insert(0, this.fb.control({ type: null, metadata: [], text: '' }));
+          this.modules.insert(0, this.fb.control({ type: null, metadata: [], text: '', id: uuidv4() }));
         }
         this.focusOnIndex(index);
       } else {

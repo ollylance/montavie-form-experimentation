@@ -1,6 +1,8 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { v4 as uuidv4 } from 'uuid';
 
+import { ModuleFormItem } from '../modules';
 import { CommonModuleComponent } from '../common-module/common-module.component';
 import { FormBuilder } from '@angular/forms';
 
@@ -18,7 +20,8 @@ export class ImageModuleComponent extends CommonModuleComponent implements OnIni
     this.moduleForm = this.fb.group({
       type: ImageModuleComponent,
       metadata: fb.control({ image: '' }),
-      text: fb.control('')
+      text: fb.control(''),
+      id: fb.control(uuidv4())
     });
   }
 
@@ -45,4 +48,8 @@ export class ImageModuleComponent extends CommonModuleComponent implements OnIni
   imageValid(index: number) {}
 
   deleteImage() {}
+
+  override writeValue(value: ModuleFormItem) {
+    this.moduleForm.patchValue(value);
+  }
 }

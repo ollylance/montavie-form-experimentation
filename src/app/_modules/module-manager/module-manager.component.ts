@@ -13,6 +13,7 @@ import {
 import { ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ModuleFormItem, modules } from '../modules';
 
+import { v4 as uuidv4 } from 'uuid';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CommonModuleComponent } from '../common-module/common-module.component';
 import { HeaderModuleComponent } from '../header-module/header-module.component';
@@ -49,7 +50,8 @@ export class ModuleManagerComponent implements ControlValueAccessor, AfterViewIn
     this.moduleForm = fb.group({
       type: null,
       metadata: fb.array([]),
-      text: fb.control('')
+      text: fb.control(''),
+      id: fb.control(uuidv4())
     });
   }
 

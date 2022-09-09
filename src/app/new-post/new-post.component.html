@@ -10,7 +10,7 @@
           cdkDragBoundary=".module-boundary"
         >
           <div class="tools">
-            <div cdkHandle class="dragHandle">&#10247;</div>
+            <div cdkDragHandle class="dragHandle">&#10247;</div>
           </div>
           <div class="module">
             <app-module-container (keydown)="handleKeydown($event, i)" [formControlName]="i"></app-module-container>

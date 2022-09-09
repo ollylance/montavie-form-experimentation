@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { v4 as uuidv4 } from 'uuid';
 
 import { CommonModuleComponent } from '../common-module/common-module.component';
 import { FormBuilder } from '@angular/forms';
@@ -18,7 +19,8 @@ export class HeaderModuleComponent extends CommonModuleComponent implements OnIn
     this.moduleForm = fb.group({
       type: HeaderModuleComponent,
       metadata: [],
-      text: fb.control('')
+      text: fb.control(''),
+      id: fb.control(uuidv4())
     });
   }
 

@@ -15,6 +15,7 @@ export type ModuleFormItem = {
   type: Type<CommonModuleComponent>;
   text: string;
   metadata: any[];
+  id: any;
 };
 
 export const modules: ModuleItem[] = [
