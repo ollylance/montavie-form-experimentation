@@ -1,19 +1,17 @@
-[contenteditable]:empty:after,
-.forcePlaceholder:after {
+[contenteditable=true]:empty:focus:before {
   content: attr(placeholder);
   color: rgba(74, 65, 65, 0.598);
 }
 
-.header {
+.text {
   cursor: text;
-  width:100%;
+  width: 100%;
   height: 100%;
 }
 
-.header .editable {
-  // font-size: 3em;
-		font-size: 64px;
-		font-weight: 700;
+.text .editable {
+  font-size: 1.3em;
+  line-height: 200%;
 }
 
 .editable:focus {

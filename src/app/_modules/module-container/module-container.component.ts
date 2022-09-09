@@ -18,8 +18,7 @@ import { ModuleFormItem } from '../modules';
 })
 export class ModuleContainerComponent implements OnInit, ControlValueAccessor {
   public moduleForm!: FormGroup;
-  selectedModule!: Type<CommonModuleComponent>;
-  isNewModuleSelected: boolean = false;
+  currModule!: Type<CommonModuleComponent>;
 
   constructor(public fb: FormBuilder) {
     this.moduleForm = fb.group({
@@ -33,20 +32,11 @@ export class ModuleContainerComponent implements OnInit, ControlValueAccessor {
     });
   }
 
-  moduleSelectedEvent(m: Type<CommonModuleComponent>) {
-    this.moduleForm.get('module')?.patchValue({ type: m, text: '' });
-    this.selectedModule = m;
-    this.isNewModuleSelected = true;
-  }
-
   onChange: any = () => {};
 
   writeValue(value: ModuleFormItem) {
     this.moduleForm.get('module')?.patchValue(value);
-    if (value.type) {
-      this.selectedModule = value.type;
-      this.isNewModuleSelected = true;
-    }
+    this.currModule = value.type;
   }
 
   registerOnChange(fn: any) {

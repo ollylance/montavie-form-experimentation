@@ -1,21 +1,22 @@
 import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { CommonModuleComponent } from '../common-module/common-module.component';
+import { FormBuilder } from '@angular/forms';
+import { v4 as uuidv4 } from 'uuid';
 import { ModuleFormItem } from '../modules';
 
 @Component({
-  selector: 'app-header-module',
-  templateUrl: './header-module.component.html',
-  styleUrls: ['./header-module.component.scss']
+  selector: 'app-text-module',
+  templateUrl: './text-module.component.html',
+  styleUrls: ['./text-module.component.scss']
 })
-export class HeaderModuleComponent extends CommonModuleComponent implements OnInit, AfterViewInit {
+export class TextModuleComponent extends CommonModuleComponent implements OnInit, AfterViewInit {
   @ViewChild('editable') editable!: ElementRef;
   moduleText: string = '';
 
   constructor(public override fb: FormBuilder, private renderer: Renderer2) {
     super(fb);
     this.moduleForm = fb.group({
-      type: HeaderModuleComponent,
+      type: TextModuleComponent,
       metadata: [],
       text: fb.control(''),
       id: fb.control('')

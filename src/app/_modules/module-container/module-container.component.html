@@ -1,8 +1,3 @@
 <form [formGroup]="moduleForm">
-  <app-module-manager
-    *ngIf="!isNewModuleSelected"
-    formControlName="module"
-    (selectedModule)="moduleSelectedEvent($any($event))"
-  ></app-module-manager>
-  <ng-container *ngIf="isNewModuleSelected" name="module" [module]="selectedModule" appModule></ng-container>
+  <ng-container name="module" [module]="currModule" appModule></ng-container>
 </form>

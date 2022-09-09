@@ -1,12 +1,11 @@
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { ModuleFormItem, modules } from '../_modules/modules';
 import { v4 as uuidv4 } from 'uuid';
-import { ModuleManagerComponent } from '../_modules/module-manager/module-manager.component';
-import { OverlayService } from '../_modules/module-overlay/overlay.service';
-import { ImageModuleComponent } from '../_modules/image-module/image-module.component';
 import { HeaderModuleComponent } from '../_modules/header-module/header-module.component';
+import { ImageModuleComponent } from '../_modules/image-module/image-module.component';
+import { ModuleFormItem, modules } from '../_modules/modules';
+import { TextModuleComponent } from '../_modules/text-module/text-module.component';
 
 @Component({
   selector: 'app-new-post',
@@ -21,7 +20,7 @@ export class NewPostComponent {
 
   constructor(private fb: FormBuilder, private elem: ElementRef) {
     this.form = fb.group({
-      modules: fb.array([fb.control({ type: HeaderModuleComponent, metadata: [], text: '', id: uuidv4() })])
+      modules: fb.array([fb.control({ type: TextModuleComponent, metadata: [], text: '', id: uuidv4() })])
     });
   }
 
@@ -75,12 +74,19 @@ export class NewPostComponent {
     console.log(this.modules.value);
   }
 
-  trackModule(index: number, module: any) {
+  trackModule(_: number, module: any) {
     return module.value.id;
   }
 
-  newModule() {
-    this.modules.push(this.fb.control({ type: ImageModuleComponent, metadata: [], text: '', id: uuidv4() }));
+  newModule(type: string) {
+    switch (type) {
+      case 'header':
+        this.modules.push(this.fb.control({ type: HeaderModuleComponent, metadata: [], text: '', id: uuidv4() }));
+        break;
+      case 'image':
+        this.modules.push(this.fb.control({ type: ImageModuleComponent, metadata: [], text: '', id: uuidv4() }));
+        break;
+    }
   }
 
   handleEnter(index: number) {
@@ -88,13 +94,15 @@ export class NewPostComponent {
     const before = pos.text.slice(0, pos.start);
     const next = pos.text.slice(pos.end);
     this.modules.at(index)?.patchValue({ text: before });
-    this.modules.insert(index + 1, this.fb.control({ type: null, metadata: [], text: next, id: uuidv4() }));
+    this.modules.insert(
+      index + 1,
+      this.fb.control({ type: TextModuleComponent, metadata: [], text: next, id: uuidv4() })
+    );
   }
 
   isTextModule(value: ModuleFormItem) {
     const moduleVal = modules.find((elem) => elem.component == value.type);
-    console.log(moduleVal?.type);
-    if (!value.type || moduleVal?.type == 'text') {
+    if (moduleVal?.type == 'text') {
       return true;
     } else {
       return false;
@@ -114,7 +122,7 @@ export class NewPostComponent {
       if (index == 0) {
         this.modules.removeAt(0);
         if (this.modules.length <= 1) {
-          this.modules.insert(0, this.fb.control({ type: null, metadata: [], text: '', id: uuidv4() }));
+          this.modules.insert(0, this.fb.control({ type: TextModuleComponent, metadata: [], text: '', id: uuidv4() }));
         }
         this.focusOnIndex(index);
       } else {
@@ -142,7 +150,7 @@ export class NewPostComponent {
       if (index == 0) {
         this.modules.removeAt(0);
         if (this.modules.length <= 1) {
-          this.modules.insert(0, this.fb.control({ type: null, metadata: [], text: '', id: uuidv4() }));
+          this.modules.insert(0, this.fb.control({ type: TextModuleComponent, metadata: [], text: '', id: uuidv4() }));
         }
         this.focusOnIndex(index);
       } else {

@@ -19,7 +19,9 @@
       </div>
     </form>
     <div class="buttons">
-      <button mat-button (click)="newModule()">Add</button>
+      <button mat-button (click)="newModule('header')">Add Header</button>
+      <button mat-button (click)="newModule('image')">Add Image</button>
+
       <button mat-button type="submit" [disabled]="!form.valid" (click)="onSubmit()">Submit</button>
     </div>
   </div>

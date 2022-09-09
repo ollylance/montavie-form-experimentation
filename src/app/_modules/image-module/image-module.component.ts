@@ -1,10 +1,8 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { v4 as uuidv4 } from 'uuid';
-
-import { ModuleFormItem } from '../modules';
-import { CommonModuleComponent } from '../common-module/common-module.component';
 import { FormBuilder } from '@angular/forms';
+import { SafeUrl } from '@angular/platform-browser';
+import { CommonModuleComponent } from '../common-module/common-module.component';
+import { ModuleFormItem } from '../modules';
 
 @Component({
   selector: 'app-image-module',
@@ -21,7 +19,7 @@ export class ImageModuleComponent extends CommonModuleComponent implements OnIni
       type: ImageModuleComponent,
       metadata: fb.control({ image: '' }),
       text: fb.control(''),
-      id: fb.control(uuidv4())
+      id: fb.control('')
     });
   }
 
