@@ -1,0 +1,10 @@
+$tabSize: 83px;
+
+.pane {
+   padding-left: $tabSize;
+   overflow: hidden;
+   column-gap: .75rem;
+   border-radius: .5rem;
+   margin-bottom: 1rem;
+   height: 100%;
+}

@@ -1,0 +1,22 @@
+$tabSize: 83px;
+
+.nav-tabs {
+  width: $tabSize;
+  position: fixed;
+  height: 100%;
+}
+
+.tab-close {
+  text-align: right;
+  cursor: pointer;
+}
+
+.tabIcon {
+  height: $tabSize;
+  cursor: pointer;
+  text-align: center;
+}
+
+.nav {
+  height: 100%;
+}

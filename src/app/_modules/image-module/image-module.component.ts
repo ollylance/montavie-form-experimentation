@@ -1,10 +1,9 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { v4 as uuidv4 } from 'uuid';
 
-import { ModuleFormItem } from '../modules';
 import { CommonModuleComponent } from '../common-module/common-module.component';
 import { FormBuilder } from '@angular/forms';
+import { ModuleFormItem } from '../modules';
+import { SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-image-module',
@@ -15,14 +14,8 @@ export class ImageModuleComponent extends CommonModuleComponent implements OnIni
   @ViewChild('fileUploader') fileUploader!: ElementRef;
   previewImgUrl: SafeUrl | undefined = undefined;
 
-  constructor(public override fb: FormBuilder) {
-    super(fb);
-    this.moduleForm = this.fb.group({
-      type: ImageModuleComponent,
-      metadata: fb.control({ image: '' }),
-      text: fb.control(''),
-      id: fb.control(uuidv4())
-    });
+  constructor(public override _fb: FormBuilder) {
+    super(_fb);
   }
 
   ngOnInit(): void {
