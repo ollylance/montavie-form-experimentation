@@ -132,6 +132,7 @@ export class NewPostComponent {
 
   handleDelete(index: number) {
     const currentValue: ModuleFormItem = this.modules.at(index).value;
+    console.log(currentValue);
     // if current module is a text module
     if (this.isTextModule(currentValue)) {
       const pos = this.getCursorPos();
@@ -139,7 +140,8 @@ export class NewPostComponent {
       if (index == 0) {
         this.modules.removeAt(0);
         if (this.modules.length <= 1) {
-          this.modules.insert(0, this.newControl(TextModuleComponent));
+          console.log(index);
+          this.modules.insert(0, this.newControl(TextModuleComponent, text));
         }
         this.focusOnIndex(index);
       } else {

@@ -49,13 +49,6 @@ export class HeaderModuleComponent extends CommonModuleComponent implements OnIn
       let text: string = this.editable.nativeElement.innerText;
       this.moduleForm.get('text')?.setValue(text);
     });
-
-    this.portal = new TemplatePortal(this.moduleSettings, this._viewContainerRef);
-    let settings = document.querySelector('#module-settings');
-    if (settings) {
-      this.host = new DomPortalOutlet(settings);
-      this.host.attach(this.portal);
-    }
   }
 
   override writeValue(value: ModuleFormItem) {
@@ -76,15 +69,5 @@ export class HeaderModuleComponent extends CommonModuleComponent implements OnIn
     currentModuleMarkups.all.bold = !currentModuleMarkups.all.bold;
 
     this.moduleForm.get('markups')?.setValue(currentModuleMarkups);
-  }
-
-  onFocus(event: any) {
-    if (this.host) {
-      this.host.attach(this.portal);
-    }
-  }
-
-  onBlur(event: any) {
-    this.host.detach();
   }
 }
