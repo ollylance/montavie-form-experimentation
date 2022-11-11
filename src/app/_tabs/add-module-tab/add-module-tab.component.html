@@ -1,0 +1,12 @@
+<div class="search-bar"></div>
+<div
+  class="add-modules-container"
+  cdkDropList
+  [cdkDropListData]="items"
+  [cdkDropListConnectedTo]="connectedList"
+  cdkDropListSortingDisabled
+>
+  <div cdkDrag class="add-module" *ngFor="let item of items">
+    {{ item.name }}
+  </div>
+</div>

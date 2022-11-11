@@ -1,11 +1,13 @@
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, QueryList, Type, ViewChild, ViewChildren } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { v4 as uuidv4 } from 'uuid';
+import { ModuleFormItem, modules } from '../_modules/modules';
+
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CommonModuleComponent } from '../_modules/common-module/common-module.component';
 import { HeaderModuleComponent } from '../_modules/header-module/header-module.component';
 import { ImageModuleComponent } from '../_modules/image-module/image-module.component';
-import { ModuleFormItem, modules } from '../_modules/modules';
 import { TextModuleComponent } from '../_modules/text-module/text-module.component';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-new-post',
@@ -13,14 +15,18 @@ import { TextModuleComponent } from '../_modules/text-module/text-module.compone
   styleUrls: ['./new-post.component.scss']
 })
 export class NewPostComponent {
+  @ViewChild('page') page!: ElementRef;
+  @ViewChild('navbar') navbar!: ElementRef;
   @ViewChildren('editable') moduleElements!: QueryList<ElementRef>;
+
   form!: FormGroup;
   focusIndex: number = 0;
   openNav: boolean = true;
+  offsetWidth = 0;
 
   constructor(private fb: FormBuilder, private elem: ElementRef) {
     this.form = fb.group({
-      modules: fb.array([fb.control({ type: TextModuleComponent, metadata: [], text: '', id: uuidv4() })])
+      modules: fb.array([this.newControl(TextModuleComponent)])
     });
   }
 
@@ -66,8 +72,26 @@ export class NewPostComponent {
     formArray.setControl(toIndex, item);
   }
 
+  newControl(type: Type<CommonModuleComponent>, text?: String, metadata?: any, markups?: any, id?: string) {
+    let standardMarkups = { bold: [], italics: [], link: [], all: { font: '', alignment: 0 } };
+    return this.fb.control({
+      type: type,
+      text: text ? text : '',
+      metadata: metadata ? metadata : {},
+      markups: markups ? markups : standardMarkups,
+      id: id ? id : uuidv4()
+    });
+  }
+
   drop(event: CdkDragDrop<ModuleFormItem[]>) {
-    this.moveItemInFormArray(this.modules, event.previousIndex, event.currentIndex);
+    if (event.previousContainer === event.container) {
+      this.moveItemInFormArray(this.modules, event.previousIndex, event.currentIndex);
+    } else {
+      const module = event.previousContainer.data[event.previousIndex];
+      this.modules.push(this.newControl(module.type));
+
+      this.moveItemInFormArray(this.modules, this.modules.length - 1, event.currentIndex);
+    }
   }
 
   onSubmit() {
@@ -78,15 +102,11 @@ export class NewPostComponent {
     return module.value.id;
   }
 
-  newModule(type: string) {
-    switch (type) {
-      case 'header':
-        this.modules.push(this.fb.control({ type: HeaderModuleComponent, metadata: [], text: '', id: uuidv4() }));
-        break;
-      case 'image':
-        this.modules.push(this.fb.control({ type: ImageModuleComponent, metadata: [], text: '', id: uuidv4() }));
-        break;
-    }
+  handleNavbar(navOpened: boolean) {
+    this.page.nativeElement.classList.add(navOpened ? 'pc-open-padding' : 'pc-closed-padding');
+    this.page.nativeElement.classList.remove(navOpened ? 'pc-closed-padding' : 'pc-open-padding');
+    this.navbar.nativeElement.classList.add(navOpened ? 'nav-open' : 'nav-closed');
+    this.navbar.nativeElement.classList.remove(navOpened ? 'nav-closed' : 'nav-open');
   }
 
   handleEnter(index: number) {
@@ -94,10 +114,7 @@ export class NewPostComponent {
     const before = pos.text.slice(0, pos.start);
     const next = pos.text.slice(pos.end);
     this.modules.at(index)?.patchValue({ text: before });
-    this.modules.insert(
-      index + 1,
-      this.fb.control({ type: TextModuleComponent, metadata: [], text: next, id: uuidv4() })
-    );
+    this.modules.insert(index + 1, this.newControl(TextModuleComponent, next));
   }
 
   isTextModule(value: ModuleFormItem) {
@@ -122,7 +139,7 @@ export class NewPostComponent {
       if (index == 0) {
         this.modules.removeAt(0);
         if (this.modules.length <= 1) {
-          this.modules.insert(0, this.fb.control({ type: TextModuleComponent, metadata: [], text: '', id: uuidv4() }));
+          this.modules.insert(0, this.newControl(TextModuleComponent));
         }
         this.focusOnIndex(index);
       } else {
@@ -150,7 +167,7 @@ export class NewPostComponent {
       if (index == 0) {
         this.modules.removeAt(0);
         if (this.modules.length <= 1) {
-          this.modules.insert(0, this.fb.control({ type: TextModuleComponent, metadata: [], text: '', id: uuidv4() }));
+          this.modules.insert(0, this.newControl(TextModuleComponent));
         }
         this.focusOnIndex(index);
       } else {

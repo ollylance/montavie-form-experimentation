@@ -1,7 +1,19 @@
-<div class="page-container">
+<div class="page-container" #page>
+  <nav class="nav nav-closed" #navbar>
+    <app-tabs (navOpened)="handleNavbar($event)">
+      <app-tab tabTitle="Add">
+        <div class="add-tab">
+          <app-add-module-tab connectedList="new-post"></app-add-module-tab>
+        </div>
+      </app-tab>
+      <app-tab tabTitle="Manage">
+        <p>Manage</p>
+      </app-tab>
+    </app-tabs>
+  </nav>
   <div class="module-container">
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="module-boundary">
-      <div formArrayName="modules" cdkDropList (cdkDropListDropped)="drop($event)">
+      <div id="new-post" formArrayName="modules" cdkDropList (cdkDropListDropped)="drop($event)">
         <div
           class="moduleElement"
           *ngFor="let module of modules.controls; let i = index"
@@ -10,7 +22,7 @@
           cdkDragBoundary=".module-boundary"
         >
           <div class="tools">
-            <div cdkDragHandle class="dragHandle">&#10247;</div>
+            <span cdkDragHandle class="dragHandle">&#10247;</span>
           </div>
           <div class="module">
             <app-module-container (keydown)="handleKeydown($event, i)" [formControlName]="i"></app-module-container>
@@ -19,10 +31,8 @@
       </div>
     </form>
     <div class="buttons">
-      <button mat-button (click)="newModule('header')">Add Header</button>
-      <button mat-button (click)="newModule('image')">Add Image</button>
-
       <button mat-button type="submit" [disabled]="!form.valid" (click)="onSubmit()">Submit</button>
     </div>
   </div>
+  <div id="module-settings" class="settings-portal"></div>
 </div>

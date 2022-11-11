@@ -1,3 +1,24 @@
-<div class="text">
-  <div class="editable" placeholder="Add Text" contenteditable="true" #editable>{{ moduleText }}</div>
+<div class="text-container">
+  <p
+    class="fw-regular fs-body editable"
+    placeholder="Add Text"
+    contenteditable="true"
+    (focus)="onFocus($event)"
+    (blur)="onBlur($event)"
+    #editable
+  >
+    {{ moduleText }}
+  </p>
 </div>
+
+<ng-template #moduleSettings>
+  <div class="module-settings" (mousedown)="settingsMouseDown($event)">
+    <button>Module Bold</button>
+  </div>
+</ng-template>
+
+<ng-template #highlightSettings>
+  <div class="module-settings" (mousedown)="settingsMouseDown($event)">
+    <button (click)="boldSelection()">Text Bold</button>
+  </div>
+</ng-template>

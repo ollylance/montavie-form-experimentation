@@ -6,18 +6,15 @@
 
 .header {
   cursor: text;
-  width:100%;
+  width: 100%;
   height: 100%;
-}
-
-.header .editable {
-  // font-size: 3em;
-		font-size: 64px;
-		font-weight: 700;
 }
 
 .editable:focus {
   outline: 0;
-  width: 100%;
-  height: 100%;
+}
+
+.module-settings {
+   width: 100%;
+   background-color: yellow;
 }

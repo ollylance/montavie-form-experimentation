@@ -16,9 +16,13 @@ import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from 
 export class CommonModuleComponent implements ControlValueAccessor {
   public moduleForm!: FormGroup;
 
-  constructor(public fb: FormBuilder) {
-    this.moduleForm = fb.group({
-      value: fb.control('')
+  constructor(public _fb: FormBuilder) {
+    this.moduleForm = _fb.group({
+      type: CommonModuleComponent,
+      markups: {},
+      metadata: [],
+      text: _fb.control(''),
+      id: _fb.control('')
     });
   }
 

@@ -1,3 +1,6 @@
+$navbarOpenSize: 350px;
+$navbarClosedSize: 83px;
+
 .page-container {
   width: 100%;
   display: flex;
@@ -6,6 +9,39 @@
   font-family: tenon, sans-serif;
 	font-weight: 400;
 	font-style: normal;
+}
+
+.pc-open-padding {
+  padding-left: $navbarOpenSize;
+  transition: .3s;
+}
+
+.pc-closed-padding {
+  padding-left: $navbarClosedSize;
+  transition: .3s;
+}
+
+.nav {
+  height: 100vh;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  display: flex;
+  transition: .3s;
+  box-shadow: 13px 0 22px 0px rgba(0, 0, 0, 0.25);
+}
+
+.nav-open {
+  width: $navbarOpenSize;
+}
+
+.nav-closed {
+  width: $navbarClosedSize;
+}
+
+app-tabs {
+  width: 100%;
 }
 
 .form {
@@ -34,10 +70,6 @@
 /* Animate an item that has been dropped. */
 .cdk-drag-animating {
   transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
-}
-
-.cdk-drag-placeholder {
-  opacity: 0;
 }
 
 .cdk-drag-preview {
@@ -69,4 +101,16 @@
 .module {
   width: 100%;
   padding-left: 10px;
+}
+
+// Settings portal
+
+.settings-portal {
+  width: 200px;
+  height: 300px;
+  border: solid 1px blue;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 20px;
 }

@@ -1,5 +1,6 @@
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { AddModuleTabComponent } from './_tabs/add-module-tab/add-module-tab.component';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
@@ -11,6 +12,9 @@ import { ModuleDirective } from './_modules/_directives/module.directive';
 import { NewPostComponent } from './new-post/new-post.component';
 import { NgModule } from '@angular/core';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { PortalModule } from '@angular/cdk/portal';
+import { TabComponent } from './_tabs/tab/tab.component';
+import { TabsComponent } from './_tabs/tabs/tabs.component';
 import { TextModuleComponent } from './_modules/text-module/text-module.component';
 
 @NgModule({
@@ -21,9 +25,20 @@ import { TextModuleComponent } from './_modules/text-module/text-module.componen
     ModuleContainerComponent,
     ModuleDirective,
     ImageModuleComponent,
-    TextModuleComponent
+    TextModuleComponent,
+    TabsComponent,
+    TabComponent,
+    AddModuleTabComponent
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, ReactiveFormsModule, OverlayModule, DragDropModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    OverlayModule,
+    DragDropModule,
+    PortalModule
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })
